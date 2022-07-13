@@ -18,8 +18,8 @@ import com.google.android.material.snackbar.Snackbar
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailsBinding
-//-    private var binding: ResultProfileBinding? = null // эта переменная существует только между методами onCreateView и onDestroyView
-//-    private val binding get() = binding!!
+    //private var binding: ResultProfileBinding? = null // эта переменная существует только между методами onCreateView и onDestroyView
+    //private val binding get() = binding!!
 
     companion object {
         fun newInstance() = MainFragment()
@@ -30,8 +30,6 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        //-return inflater.inflate(R.layout.main_fragment, container, false)
-//-        binding = ResultProfileBinding.inflate(inflater, container, false)
         binding = FragmentDetailsBinding.inflate(inflater, container, false)
         val view = binding.root
         return binding.root
@@ -39,32 +37,24 @@ class MainFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-//-        binding = null
-        //- Обнуляем _binding в onDestroyView, чтобы избежать утечек и не желаемого поведения.
-        //- (В Activity ничего похожего делать не требуется)
+        /*binding = null Обнуляем _binding в onDestroyView, чтобы избежать утечек и не желаемого поведения.
+        (В Activity ничего похожего делать не требуется)*/
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-            // Строка ниже создаётся по умолчанию. Это то, благодаря чему работает переворот дисплея
-            // Модель создаётся первый раз или возвращается, если уже была создана - благодаря ViewModelProvider. Навроде синглтона.
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-            // ::class.java — не объект класса, а ссылка на тип класса
-//        val observer = Observer<Any> { renderData(it) } // Делаем обсёрвер, дёргающий renderData
-            // Возвращает ссылку на нашу LiveData и подписываемся на неё observe:
-//        viewModel.getData().observe(viewLifecycleOwner, observer)
-//        viewModel.getWeather()
+        /* Строка ниже создаётся по умолчанию. Это то, благодаря чему работает переворот дисплея
+        Модель создаётся первый раз или возвращается, если уже была создана
+         - благодаря ViewModelProvider. Навроде синглтона. */
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java] // ::class.java — не объект класса, а ссылка на тип класса
+        //val observer = Observer<Any> { renderData(it) }
+        //viewModel.getData().observe(viewLifecycleOwner, observer) // Возвращает ссылку на LiveData и подписывается на наблюдение
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
         viewModel.getWeather()
 
-            // as - приведение типов, например it as AppState
-
-        // Пример взаимодействия с вложенными элементами:
-//        binding.includedLayout.includedTextView.text = ""
-
-        /*- binding.name.text = viewModel.name
+        /*binding.name.text = viewModel.name
         Тоже самое. Откуда в viewModel name и userClicked?
-        binding.button.setOnClickListener { viewModel.userClicked() } */
+        binding.button.setOnClickListener { viewModel.userClicked() }*/
     }
 
     private fun renderData(appState: AppState) = with(binding ) {
@@ -72,7 +62,7 @@ class MainFragment : Fragment() {
             is AppState.Success -> {
                     val weatherData = appState.weatherData
                     loadingLayout.visibility = View.GONE
-//                    Snackbar.make(mainView, "Success", Snackbar.LENGTH_LONG).show()
+                    //Snackbar.make(mainView, "Success", Snackbar.LENGTH_LONG).show()
                     setData(weatherData)
                 }
                 is AppState.Loading -> {
@@ -80,7 +70,7 @@ class MainFragment : Fragment() {
                 }
                 is AppState.Error -> {
                     loadingLayout.visibility = View.GONE
-//                    val error = appState.error // можно также взять error, но мы его ещё не клали в AppState
+                    //val error = appState.error // можно также взять error, но его ещё не положили в AppState
                     Snackbar.make(mainView, "Error", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Reload") { viewModel.getWeather() }
                             .show()
@@ -98,7 +88,6 @@ class MainFragment : Fragment() {
         )
         temperatureValue.text = weatherData.temperature.toString()
         feelsLikeValue.text = weatherData.feelslLike.toString()
-
     }
 
 }

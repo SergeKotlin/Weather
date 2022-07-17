@@ -1,6 +1,6 @@
-package com.android1.weather.model
+package com.android1.weather.ui.viewModel
 
-import com.android1.weather.model.entities.Weather
+import com.android1.weather.data.model.entities.Weather
 
 sealed class AppState { // "запечатанный класс", гибкий enum
     data class Success(val weatherData: Weather) : AppState()

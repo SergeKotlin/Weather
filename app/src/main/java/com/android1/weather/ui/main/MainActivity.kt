@@ -1,12 +1,9 @@
-package com.android1.weather
+package com.android1.weather.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
+import com.android1.weather.R
 import com.android1.weather.databinding.MainActivityBinding
-import com.android1.weather.databinding.ResultProfileBinding
-import com.android1.weather.ui.main.MainFragment
-import com.android1.weather.ui.main.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 

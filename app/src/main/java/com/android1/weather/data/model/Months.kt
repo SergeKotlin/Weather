@@ -1,4 +1,4 @@
-package com.android1.weather.ui.main
+package com.android1.weather.data.model
 
 sealed class Months { // "запечатанный класс", гибкий enum
     data class January(val monthIndex: Int, val shortForm: String) : Months()

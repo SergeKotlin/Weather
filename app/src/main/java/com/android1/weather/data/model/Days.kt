@@ -1,4 +1,4 @@
-package com.android1.weather.ui.main
+package com.android1.weather.data.model
 
 enum class Days (dayNo: Int) {
     SUNDAY(0),

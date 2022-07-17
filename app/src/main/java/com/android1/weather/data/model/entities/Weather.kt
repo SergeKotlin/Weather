@@ -1,4 +1,4 @@
-package com.android1.weather.model.entities
+package com.android1.weather.data.model.entities
 
 data class Weather(
         val city: City = getDefaultCity(),

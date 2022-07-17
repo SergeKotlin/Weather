@@ -10,16 +10,16 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.android1.weather.R
 import com.android1.weather.databinding.FragmentDetailsBinding
-import com.android1.weather.databinding.MainFragmentBinding
-import com.android1.weather.model.AppState
-import com.android1.weather.model.entities.Weather
+import com.android1.weather.ui.viewModel.AppState
+import com.android1.weather.data.model.entities.Weather
+import com.android1.weather.ui.viewModel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
 
-    private lateinit var binding: FragmentDetailsBinding
-    //private var binding: ResultProfileBinding? = null // эта переменная существует только между методами onCreateView и onDestroyView
-    //private val binding get() = binding!!
+    //private var binding: ResultProfileBinding? = null
+    private var _binding: FragmentDetailsBinding? = null // эта переменная существует только между методами onCreateView и onDestroyView
+    private val binding get() = _binding!!
 
     companion object {
         fun newInstance() = MainFragment()
@@ -30,15 +30,16 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         val view = binding.root
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        /*binding = null Обнуляем _binding в onDestroyView, чтобы избежать утечек и не желаемого поведения.
-        (В Activity ничего похожего делать не требуется)*/
+        _binding = null
+        /* Обязательно обнуляем _binding в onDestroyView, чтобы избежать утечек и нежелаемого
+        поведения. (В Activity ничего похожего делать не требуется) */
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -47,9 +48,7 @@ class MainFragment : Fragment() {
         Модель создаётся первый раз или возвращается, если уже была создана
          - благодаря ViewModelProvider. Навроде синглтона. */
         viewModel = ViewModelProvider(this)[MainViewModel::class.java] // ::class.java — не объект класса, а ссылка на тип класса
-        //val observer = Observer<Any> { renderData(it) }
-        //viewModel.getData().observe(viewLifecycleOwner, observer) // Возвращает ссылку на LiveData и подписывается на наблюдение
-        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) }) // Подписывается на наблюдение LiveData (и возвращает ссылку на неё), выполняя renderData()
         viewModel.getWeather()
 
         /*binding.name.text = viewModel.name
@@ -62,13 +61,13 @@ class MainFragment : Fragment() {
             is AppState.Success -> {
                     val weatherData = appState.weatherData
                     loadingLayout.visibility = View.GONE
-                    //Snackbar.make(mainView, "Success", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(mainView, "Success", Snackbar.LENGTH_LONG).show()
                     setData(weatherData)
                 }
-                is AppState.Loading -> {
-                    loadingLayout.visibility = View.VISIBLE
-                }
-                is AppState.Error -> {
+            is AppState.Loading -> {
+                loadingLayout.visibility = View.VISIBLE
+            }
+            is AppState.Error -> {
                     loadingLayout.visibility = View.GONE
                     //val error = appState.error // можно также взять error, но его ещё не положили в AppState
                     Snackbar.make(mainView, "Error", Snackbar.LENGTH_INDEFINITE)
@@ -76,7 +75,6 @@ class MainFragment : Fragment() {
                             .show()
             }
         }
-//        Toast.makeText(context, "data", Toast.LENGTH_LONG).show()
     }
 
     private fun setData(weatherData: Weather) = with(binding) {

@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.android1.weather.R
 import com.android1.weather.databinding.MainActivityBinding
+import com.android1.weather.ui.details.DetailsFragment
 
 class MainActivity : AppCompatActivity() {
 
-    //private lateinit var binding: ResultProfileBinding
     private lateinit var binding: MainActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
